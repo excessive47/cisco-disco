@@ -87,7 +87,7 @@ def ask():
 def question_answer():
     data = request.get_json()
     user_input = data.get("input", "")
-    answer = ask_openai(user_query, knowledge_base)
+    answer = ask_openai(user_input, knowledge_base)
     response = {"input": user_input, "answer": answer}
     return jsonify(response)
 

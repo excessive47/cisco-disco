@@ -1,8 +1,10 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, render_template_string, jsonify
 from openai import OpenAI
+from flask_cors import CORS
 import os
 
 app = Flask(__name__)
+CORS(app)  # CORS für alle Routen aktivieren
 
 client = OpenAI()
 
@@ -79,6 +81,15 @@ def ask():
     user_query = request.form["question"]
     answer = ask_openai(user_query, knowledge_base)
     return render_template_string(html_template, answer=answer)
+
+
+@app.route("/api/qa_system", methods=["POST"])
+def question_answer():
+    data = request.get_json()
+    user_input = data.get("input", "")
+    answer = ask_openai(user_query, knowledge_base)
+    response = {"input": user_input, "answer": answer}
+    return jsonify(response)
 
 
 if __name__ == "__main__":
